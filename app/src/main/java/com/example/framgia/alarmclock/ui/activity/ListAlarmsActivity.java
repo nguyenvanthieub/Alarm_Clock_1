@@ -33,7 +33,7 @@ import io.realm.Realm;
  * Created by framgia on 13/07/2016.
  */
 public class ListAlarmsActivity extends BaseActivity implements View.OnClickListener,
-    OnClickItemListener, OnLongClickItemListener, OnClickCheckedChangeItemListener {
+        OnClickItemListener, OnLongClickItemListener, OnClickCheckedChangeItemListener {
     private Button mButtonAddAlarm, mButtonDeleteAlarm, mButtonCancel;
     private AlarmRecyclerViewAdapter mAlarmRecyclerViewAdapter;
     private List<Alarm> mAlarmList;
@@ -58,12 +58,12 @@ public class ListAlarmsActivity extends BaseActivity implements View.OnClickList
     private void initViews() {
         getSupportActionBar().setTitle(R.string.alarms);
         RecyclerView recyclerViewListAlarms =
-            (RecyclerView) findViewById(R.id.recycler_view_list_alarms);
+                (RecyclerView) findViewById(R.id.recycler_view_list_alarms);
         mButtonAddAlarm = (Button) findViewById(R.id.button_add_alarm);
         mButtonDeleteAlarm = (Button) findViewById(R.id.button_delete);
         mButtonCancel = (Button) findViewById(R.id.button_cancel);
         mAlarmRecyclerViewAdapter =
-            new AlarmRecyclerViewAdapter(this, mAlarmList, this, this, this);
+                new AlarmRecyclerViewAdapter(this, mAlarmList, this, this, this);
         recyclerViewListAlarms.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewListAlarms.setAdapter(mAlarmRecyclerViewAdapter);
     }
@@ -142,7 +142,7 @@ public class ListAlarmsActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onLongClickItem(View view, AlarmRecyclerViewAdapter.AlarmViewHolder holder, int
-        position) {
+            position) {
         switch (view.getId()) {
             case R.id.relative_layout_item_alarm:
                 AlarmRecyclerViewAdapter.IS_SHOWED_CHECKBOX = true;
@@ -161,12 +161,12 @@ public class ListAlarmsActivity extends BaseActivity implements View.OnClickList
     public void onClickCheckedChangeItem(View view, RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof AlarmRecyclerViewAdapter.AlarmViewHolder) {
             AlarmRecyclerViewAdapter.AlarmViewHolder alarmViewHolder =
-                (AlarmRecyclerViewAdapter.AlarmViewHolder) holder;
+                    (AlarmRecyclerViewAdapter.AlarmViewHolder) holder;
             switch (view.getId()) {
                 case R.id.checkbox_select_alarm:
                     boolean newCheckBoxState = !mAlarmList.get(position).isChecked();
                     alarmViewHolder.mRelativeLayoutItemAlarm.setBackgroundColor(
-                        getColorById(newCheckBoxState ? R.color.indigo : R.color.black));
+                            getColorById(newCheckBoxState ? R.color.indigo : R.color.black));
                     mRealm.beginTransaction();
                     mAlarmList.get(position).setChecked(newCheckBoxState);
                     mRealm.commitTransaction();
@@ -174,11 +174,7 @@ public class ListAlarmsActivity extends BaseActivity implements View.OnClickList
                 case R.id.switch_enable_alarm:
                     boolean newSwitchState = !mAlarmList.get(position).isEnabled();
                     alarmViewHolder.mTextViewAlarmTime
-                        .setTextColor(newSwitchState ? Color.WHITE : Color.GRAY);
-                    alarmViewHolder.mTextViewAlarmDay
-                        .setTextColor(newSwitchState ? Color.WHITE : Color.GRAY);
-                    alarmViewHolder.mTextViewAlarmNote
-                        .setTextColor(newSwitchState ? Color.WHITE : Color.GRAY);
+                            .setTextColor(newSwitchState ? Color.WHITE : Color.GRAY);
                     mRealm.beginTransaction();
                     mAlarmList.get(position).setEnabled(newSwitchState);
                     mRealm.commitTransaction();
@@ -219,23 +215,23 @@ public class ListAlarmsActivity extends BaseActivity implements View.OnClickList
                     mRealm.commitTransaction();
                     mAlarmRecyclerViewAdapter.notifyDataSetChanged();
                     new AlertDialog.Builder(this)
-                        .setTitle(R.string.title_delete_all_alarms)
-                        .setMessage(R.string.message_delete_all_alarms)
-                        .setPositiveButton(android.R.string.yes,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    AlarmRepository.deleteAll();
-                                    AlarmRecyclerViewAdapter.IS_SHOWED_CHECKBOX = false;
-                                    mAlarmRecyclerViewAdapter.notifyDataSetChanged();
-                                }
-                            })
-                        .setNegativeButton(android.R.string.no,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    clearCheckBox();
-                                }
-                            })
-                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+                            .setTitle(R.string.title_delete_all_alarms)
+                            .setMessage(R.string.message_delete_all_alarms)
+                            .setPositiveButton(android.R.string.yes,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            AlarmRepository.deleteAll();
+                                            AlarmRecyclerViewAdapter.IS_SHOWED_CHECKBOX = false;
+                                            mAlarmRecyclerViewAdapter.notifyDataSetChanged();
+                                        }
+                                    })
+                            .setNegativeButton(android.R.string.no,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            clearCheckBox();
+                                        }
+                                    })
+                            .setIcon(android.R.drawable.ic_dialog_alert).show();
                 }
                 break;
         }

@@ -12,7 +12,7 @@ public class AlarmApplication extends Application {
     public void onCreate() {
         super.onCreate();
         RealmConfiguration configuration = new RealmConfiguration.Builder(this)
-            .deleteRealmIfMigrationNeeded().build();
+                .deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
     }
 }

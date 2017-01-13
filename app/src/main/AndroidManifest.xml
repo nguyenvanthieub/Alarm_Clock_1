@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.example.framgia.alarmclock"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="1"
-          android:versionName="1.0">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-sdk
-        android:maxSdkVersion="23"/>
+    <uses-sdk android:maxSdkVersion="23" />
 
     <application
         android:name=".AlarmApplication"
@@ -24,62 +23,26 @@
             android:name=".ui.activity.MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SettingActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.RepeatActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
             android:name=".ui.activity.ListAlarmsActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.SnoozeActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.SleepTimerActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.DisplayActivity"
-            android:theme="@style/Theme.AppCompat"/>
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".ui.activity.AlarmDetailActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.SoundMusicActivity"
-            android:theme="@style/Theme.AppCompat"/>
-
-        <receiver
-            android:name=".ui.widget.AnalogClockWidget"
-            android:icon="@drawable/widget_analog_type1"
-            android:label="@string/clock_analog_100x100">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_info"/>
-        </receiver>
+            android:theme="@style/Theme.AppCompat" />
 
         <receiver
             android:name="com.example.framgia.alarmclock.ui.alarms.AlarmBootReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.example.framgia.alarmclock.service.SchedulingService"/>
+        <service android:name="com.example.framgia.alarmclock.service.SchedulingService" />
 
-        <activity
-            android:name=".ui.activity.AdvancedActivity"
-            android:theme="@style/Theme.AppCompat"/>
-        <activity
-            android:name=".ui.activity.ListSongsActivity"
-            android:theme="@style/Theme.AppCompat"/>
     </application>
 </manifest>

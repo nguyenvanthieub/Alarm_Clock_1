@@ -51,7 +51,7 @@ public class AlarmUtils {
         Intent intent = new Intent(context, SchedulingService.class);
         intent.putExtra(Constants.OBJECT_ID, alarm.getId());
         mPendingIntent = PendingIntent.getService(context, alarm.getId(), intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
         // add time
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getFormattedTimeHours());
@@ -64,27 +64,13 @@ public class AlarmUtils {
         enabledAutoBoot(context, PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
     }
 
-    private static void setExactAlarmManager(Calendar calendar, String repeat) {
-        if (TextUtils.isEmpty(repeat)) {
-            mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+    private static void setExactAlarmManager(Calendar calendar) {
+        mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 mPendingIntent);
-        } else {
-            // TODO: 27/07/2016
-            // test with AlarmManager.INTERVAL_FIFTEEN_MINUTES
-            mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
-        }
     }
 
-    private static void setAlarmManager(Calendar calendar, String repeat) {
-        if (TextUtils.isEmpty(repeat)) {
-            mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);
-        } else {
-            // TODO: 27/07/2016
-            // test with AlarmManager.INTERVAL_FIFTEEN_MINUTES
-            mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, mPendingIntent);
-        }
+    private static void setAlarmManager(Calendar calendar) {
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);
     }
 
     public static void cancelAlarm(Context context, Alarm alarm) {
@@ -92,7 +78,7 @@ public class AlarmUtils {
         Intent intent = new Intent(context, SchedulingService.class);
         intent.putExtra(Constants.OBJECT_ID, alarm.getId());
         mPendingIntent = PendingIntent.getService(context, alarm.getId(), intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmManager.cancel(mPendingIntent);
         enabledAutoBoot(context, PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
     }
@@ -101,26 +87,11 @@ public class AlarmUtils {
         ComponentName componentName = new ComponentName(context, AlarmBootReceiver.class);
         PackageManager packageManager = context.getPackageManager();
         packageManager.setComponentEnabledSetting(componentName,
-            enabled, PackageManager.DONT_KILL_APP);
-    }
-
-    public static void setAlarmSnooze(Context context, Alarm alarm) {
-        mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SchedulingService.class);
-        intent.putExtra(Constants.OBJECT_ID, alarm.getId());
-        mPendingIntent = PendingIntent.getService(context, alarm.getId(), intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
-        // add time
-        Calendar calendar = Calendar.getInstance();
-        calendar.roll(Calendar.MINUTE, alarm.getSnoozeTime());
-        // check alarm
-        setAlarmByVersionAPI(alarm, calendar);
-        enabledAutoBoot(context, PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+                enabled, PackageManager.DONT_KILL_APP);
     }
 
     private static void setAlarmByVersionAPI(Alarm alarm, Calendar calendar) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-            setAlarmManager(calendar, alarm.getRepeat().getRepeatDay());
-        else setExactAlarmManager(calendar, alarm.getRepeat().getRepeatDay());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) setAlarmManager(calendar);
+        else setExactAlarmManager(calendar);
     }
 }

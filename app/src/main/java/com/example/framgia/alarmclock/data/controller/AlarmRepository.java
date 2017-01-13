@@ -44,7 +44,7 @@ public class AlarmRepository {
             @Override
             public void execute(Realm realm) {
                 RealmObject result = realm.where(Alarm.class).equalTo(Constants.ID_FIELD, id)
-                    .findFirst();
+                        .findFirst();
                 result.deleteFromRealm();
             }
         });
@@ -61,7 +61,7 @@ public class AlarmRepository {
 
     public static int getNextId() {
         return getSize() == 0 ? 1 :
-            mRealm.where(Alarm.class).findAll().max(Constants.ID_FIELD).intValue() + 1;
+                mRealm.where(Alarm.class).findAll().max(Constants.ID_FIELD).intValue() + 1;
     }
 
     public static int getSize() {

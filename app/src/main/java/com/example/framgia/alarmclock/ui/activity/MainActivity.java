@@ -36,9 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int DEFAULT_NULL = -1;
     private TextClock mTextClockHour, mTextClockSecond, mTextClockAmPm;
     private AnalogClock mAnalogClockThinLine;
-    private TextView mTextViewBattery, mTextViewHideHour, mTextViewHideSecond, mTextViewDay;
-    private ImageView mImageViewWeather, mImageViewSettings, mImageViewHelp, mImageViewAlarm;
-    private ImageView mImageViewTimer, mImageViewStopAlarm, mImageViewSnooze;
+    private TextView mTextViewHideHour, mTextViewHideSecond, mTextViewDay;
+    private ImageView mImageViewAlarm, mImageViewStopAlarm;
     private GestureDetector mGestureDetector;
     private float mAlpha;
     private boolean mIscreated, mIsSlideFingers, mIsAlarmFinish;
@@ -73,13 +72,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intentAlarmData = getIntent();
         if (intentAlarmData != null) {
             mAlarm = AlarmRepository.getAlarmById(
-                intentAlarmData.getIntExtra(Constants.OBJECT_ID, Constants.DEFAULT_INTENT_VALUE));
+                    intentAlarmData.getIntExtra(Constants.OBJECT_ID, Constants.DEFAULT_INTENT_VALUE));
         }
     }
 
     private void updateData() {
         mSharedPreferences = getSharedPreferences(Constants.SHARE_PREFERENCES,
-            Context.MODE_PRIVATE);
+                Context.MODE_PRIVATE);
         mIsSlideFingers = mSharedPreferences.getBoolean(Constants.SLIDE_FINGERS, true);
         mAlpha = Constants.ALPHA_MAX;
     }
@@ -111,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // text day
         mTextViewDay = (TextView) findViewById(R.id.text_day);
         mTextViewDay.setTypeface(mTypeFaceDay);
-        // text battery
-        mTextViewBattery = (TextView) findViewById(R.id.text_battery);
         // hide text
         mTextViewHideHour = (TextView) findViewById(R.id.text_hide_hour);
         mTextViewHideSecond = (TextView) findViewById(R.id.text_hide_second);
@@ -122,22 +119,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initImageView() {
         // image icon
-        mImageViewWeather = (ImageView) findViewById(R.id.image_weather);
-        mImageViewSettings = (ImageView) findViewById(R.id.image_settings);
-        mImageViewHelp = (ImageView) findViewById(R.id.image_help);
         mImageViewAlarm = (ImageView) findViewById(R.id.image_alarm);
-        mImageViewTimer = (ImageView) findViewById(R.id.image_timer);
         mImageViewStopAlarm = (ImageView) findViewById(R.id.image_stop_alarm);
-        mImageViewSnooze = (ImageView) findViewById(R.id.image_snooze);
     }
 
     private void initOnListener() {
-        mImageViewHelp.setOnClickListener(this);
         mImageViewAlarm.setOnClickListener(this);
-        mImageViewTimer.setOnClickListener(this);
-        mImageViewSnooze.setOnClickListener(this);
-        mImageViewWeather.setOnClickListener(this);
-        mImageViewSettings.setOnClickListener(this);
         mImageViewStopAlarm.setOnClickListener(this);
     }
 
@@ -166,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showAdvanced() {
         showAdvancedTextClock();
-        showAdvancedBattery();
         showAdvancedTypeClock();
         showAdvancedTextViewDay();
     }
@@ -187,50 +173,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void onSimpleOnGestureListener() {
         GestureDetector.SimpleOnGestureListener simpleOnGestureListener =
-            new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                       float velocityY) {
-                    if (mIsSlideFingers) {
-                        float y1 = e1.getY();
-                        float y2 = e2.getY();
-                        if (y1 > y2) {
-                            onFadeInChangeBrightness(Constants.UP);
-                        } else if (y1 < y2) {
-                            onFadeInChangeBrightness(Constants.DOWN);
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        if (mIsSlideFingers) {
+                            float y1 = e1.getY();
+                            float y2 = e2.getY();
+                            if (y1 > y2) {
+                                onFadeInChangeBrightness(Constants.UP);
+                            } else if (y1 < y2) {
+                                onFadeInChangeBrightness(Constants.DOWN);
+                            }
                         }
+                        return super.onFling(e1, e2, velocityX, velocityY);
                     }
-                    return super.onFling(e1, e2, velocityX, velocityY);
-                }
-            };
+                };
         mGestureDetector = new GestureDetector(this, simpleOnGestureListener);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.image_weather:
-                ToastUtils.showToast(getApplicationContext(), R.string.update_feature);
-                break;
-            case R.id.image_settings:
-                openActivity(SettingActivity.class);
-                break;
-            case R.id.image_help:
-                ToastUtils.showToast(getApplicationContext(), R.string.update_feature);
-                break;
             case R.id.image_alarm:
                 openActivity(ListAlarmsActivity.class);
                 break;
-            case R.id.image_timer:
-                openActivity(SleepTimerActivity.class);
-                break;
             case R.id.image_stop_alarm:
                 stopAlarm();
-                mImageViewSnooze.setVisibility(View.INVISIBLE);
                 mImageViewStopAlarm.setVisibility(View.INVISIBLE);
-                break;
-            case R.id.image_snooze:
-                updateSnooze();
                 break;
         }
     }
@@ -243,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showAdvancedTextViewDay() {
         mTextViewDay.setText(new SimpleDateFormat(Constants.FORMAT_DAY_SHORT)
-            .format(Calendar.getInstance().getTime()).toUpperCase());
+                .format(Calendar.getInstance().getTime()).toUpperCase());
         boolean showDay = mSharedPreferences.getBoolean(Constants.SHOW_DAY, true);
         mTextViewDay.setVisibility(showDay ? View.VISIBLE : View.INVISIBLE);
     }
@@ -264,24 +234,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTextClockAmPm.setVisibility(use24HourFormat ? View.INVISIBLE : View.VISIBLE);
     }
 
-    private void showAdvancedBattery() {
-        // battery
-        boolean showBattery = mSharedPreferences.getBoolean(Constants.SHOW_BATTERY, true);
-        mTextViewBattery.setVisibility(showBattery ? View.VISIBLE : View.GONE);
-        if (showBattery) {
-            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-            Intent batteryStatus = registerReceiver(null, intentFilter);
-            assert batteryStatus != null;
-            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, DEFAULT_NULL);
-            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, DEFAULT_NULL);
-            int batteryPct = level * Constants.PERCENTAGES / scale;
-            mTextViewBattery.setText(String.format(getString(R.string.battery), batteryPct));
-        }
-    }
-
     private void showAdvancedTypeClock() {
         int typeClock =
-            mSharedPreferences.getInt(Constants.TYPE_CLOCKS, Constants.TYPE_CLOCKS_WHITE);
+                mSharedPreferences.getInt(Constants.TYPE_CLOCKS, Constants.TYPE_CLOCKS_WHITE);
         switch (typeClock) {
             case Constants.TYPE_CLOCKS_WHITE:
                 showColorViews(Color.WHITE, R.color.colorWhite);
@@ -318,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAnalogClockThinLine.setVisibility(showAnalog ? View.VISIBLE : View.INVISIBLE);
         mTextViewHideHour.setVisibility(showAnalog ? View.INVISIBLE : View.VISIBLE);
         mTextViewHideSecond
-            .setVisibility(showSeconds && !showAnalog ? View.VISIBLE : View.INVISIBLE);
+                .setVisibility(showSeconds && !showAnalog ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showColorViews(int color, int colorHide) {
@@ -328,15 +283,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTextClockSecond.setTextColor(color);
         // text view
         mTextViewDay.setTextColor(color);
-        mTextViewBattery.setTextColor(color);
         mTextViewHideHour.setTextColor(ContextCompat.getColor(this, colorHide));
         mTextViewHideSecond.setTextColor(ContextCompat.getColor(this, colorHide));
         // image view
-        mImageViewHelp.setColorFilter(color);
         mImageViewAlarm.setColorFilter(color);
-        mImageViewTimer.setColorFilter(color);
-        mImageViewWeather.setColorFilter(color);
-        mImageViewSettings.setColorFilter(color);
     }
 
     private void onFadeInChangeBrightness(int type) {
@@ -363,14 +313,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTextClockAmPm.setAlpha(mAlpha);
         mTextClockSecond.setAlpha(mAlpha);
         // image view
-        mImageViewHelp.setAlpha(mAlpha);
         mImageViewAlarm.setAlpha(mAlpha);
-        mImageViewTimer.setAlpha(mAlpha);
-        mImageViewWeather.setAlpha(mAlpha);
-        mImageViewSettings.setAlpha(mAlpha);
         // text view
         mTextViewDay.setAlpha(mAlpha);
-        mTextViewBattery.setAlpha(mAlpha);
         // analog clock
         mAnalogClockThinLine.setAlpha(mAlpha);
     }
@@ -391,9 +336,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void playRingAndVibrate() {
         if (mAlarm.isValid() && mVibrator.hasVibrator()) {
             mVibrator.vibrate(new long[]{Constants.TIME_VIBRATOR, Constants.TIME_VIBRATOR},
-                Constants.VIBRATOR_REPEAT);
+                    Constants.VIBRATOR_REPEAT);
         }
-        MusicPlayerUtils.playMusic(this, mAlarm.getSong().getPath());
+        MusicPlayerUtils.playMusic(this);
     }
 
     public void setupAction() {
@@ -402,7 +347,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (action) {
             case Constants.ACTION_FULLSCREEN_ACTIVITY:
                 if (!mIsAlarmFinish) {
-                    showAlarmSnooze();
                     playRingAndVibrate();
                 }
                 break;
@@ -415,25 +359,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
-    private void showAlarmSnooze() {
-        mImageViewSnooze.setVisibility(View.VISIBLE);
-        mImageViewStopAlarm.setVisibility(View.VISIBLE);
-    }
-
-    private void updateSnooze() {
-        mImageViewSnooze.setVisibility(View.INVISIBLE);
-        AlarmUtils.setAlarmSnooze(this, mAlarm);
-        stopAlarm();
-        finish();
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

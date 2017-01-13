@@ -19,13 +19,14 @@ public class MusicPlayerUtils {
     private static MediaPlayer mMediaPlayer;
     private final static int VOLUME_RATIO = 5;
 
-    public static void playMusic(Context context, String path) {
+    public static void playMusic(Context context) {
+        String path =""+R.raw.bells;
         try {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setLooping(true);
             if (isSound(path))
                 mMediaPlayer.setDataSource(context,
-                    Uri.parse(URI_RESOURCE + context.getPackageName() + File.separator + path));
+                        Uri.parse(URI_RESOURCE + context.getPackageName() + File.separator + path));
             else mMediaPlayer.setDataSource(path);
             mMediaPlayer.prepareAsync();
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -41,9 +42,9 @@ public class MusicPlayerUtils {
 
     public static void setVolume(Activity activity, int volume) {
         AudioManager audioManager =
-            (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+                (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume / VOLUME_RATIO,
-            AudioManager.FLAG_PLAY_SOUND);
+                AudioManager.FLAG_PLAY_SOUND);
     }
 
     private static boolean isSound(String path) {
@@ -54,16 +55,7 @@ public class MusicPlayerUtils {
             return false;
         }
         switch (idPath) {
-            case R.raw.mountain:
-            case R.raw.old_alarm_clock:
-            case R.raw.digital:
             case R.raw.bells:
-            case R.raw.get_funky:
-            case R.raw.good_morning:
-            case R.raw.mellow:
-            case R.raw.electro:
-            case R.raw.future:
-            case R.raw.noise:
                 return true;
             default:
                 return false;

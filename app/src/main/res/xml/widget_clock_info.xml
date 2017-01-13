@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:initialLayout="@layout/widget_clock_analog"
-                    android:minHeight="@dimen/widget_clock_info_min_height"
-                    android:minWidth="@dimen/widget_clock_info_min_width"
-                    android:updatePeriodMillis="0">
-</appwidget-provider>
